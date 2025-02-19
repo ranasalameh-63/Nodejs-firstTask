@@ -1,16 +1,22 @@
-const express = require('express');
-const cors = require('cors');
+const express = require("express");
+const axios = require("axios");
+const cors = require("cors");
+require("dotenv").config();
 
-//express js server 
 const app = express();
 const PORT = 8000;
+
 app.use(cors());
-app.use(express.json()); 
+app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send('Hello, World!'); // Send 'Hello, World!' as the response
-  });
-
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+// Fetch products from Fake Store API
+app.get("/api/products", async (req, res) => {
+  try {
+    const response = await axios.get("https://fakestoreapi.com/products");
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch products" });
+  }
 });
+
+app.listen(PORT, () => console.log(`Server is running on http://localhost:${PORT}`));
